@@ -53,7 +53,8 @@ class CanTools():
 if __name__ == "__main__":
 	#myNet = CanTools(interface)
 	myNet = CanTools('can1')
+	net2 = CanTools('can0')
 	while True:
-		myNet.readMessage()
-		myNet.sendMessage(0x18fef1c3, b'hello')
+		print (myNet.readMessage())
+		print (net2.readMessage())
 		time.sleep(.1)

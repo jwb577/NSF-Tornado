@@ -18,19 +18,20 @@ class NSFlogger:
         while self.running:
             if q.qsize() > self.blocksize and len(block)<self.blocksize:
                 block.append(q.get())
+                print (self.interface)
             elif len(block) == self.blocksize:
                 print('attempting to log block to mysql')
-                print (block)
                 log_message_block(block)
+                del block[:]
             else:
                 pass
 
     def listen(self, bus, q):
+        print ('started to listen on ' + self.interface)
         while True:
        	    message = bus.readMessage()
             utc = arrow.utcnow()
-            timestamp = str(utc.timestamp) + str(utc.microsecond)
-            print (message)
+            timestamp = str(utc.timestamp) + '.' + str(utc.microsecond)
             q.put((timestamp, message))
 
     def start(self):
@@ -46,7 +47,5 @@ class NSFlogger:
 if __name__ == '__main__':
     can0 = NSFlogger(blocksize=1000, interface='can0')
     can1 = NSFlogger(blocksize=1000, interface='can1')
-    bus0 = CanTools(can0.interface)
-    bus1 = CanTools(can1.interface)
-    can1.listen(bus1)
-    can0.listen(bus0)
+    can1.start()
+    can0.start()
