@@ -15,21 +15,16 @@ class NSFlogger:
         except KeyError:
             print ('KeyError on NSFlogger constructor')
     def push(self, q):
-        print('push started on '+ self.interface)
         block = []
         while self.running:
             if q.qsize() > self.blocksize and len(block)<self.blocksize:
                 block.append(q.get())
-                print (self.interface)
             elif len(block) == self.blocksize:
-                print('attempting to log block to mysql')
                 log_message_block(block)
                 del block[:]
             else:
                 pass
-
     def listen(self, bus, q):
-        print ('started to listen on ' + self.interface)
         while True:
        	    message = bus.readMessage()
             utc = arrow.utcnow()
@@ -39,7 +34,6 @@ class NSFlogger:
     def start(self):
         bus = CanTools(self.interface)
         self.running = True
-        print('started on '+self.interface)
         Process(target=self.listen, args=(bus,self.q)).start()
         Process(target=self.push, args=(self.q,)).start()
 

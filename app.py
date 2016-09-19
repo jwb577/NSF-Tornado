@@ -9,6 +9,7 @@ import sys
 from NSFlogger import NSFlogger
 from NSFsettings import *
 from NSFviews import *
+from DB_status import DB_status
 
 # Assign handler to the server root  (127.0.0.1:PORT/)
 application = tornado.web.Application([
@@ -43,6 +44,6 @@ if __name__ == "__main__":
     can1 = NSFlogger(blocksize=1000, interface='can1')
     can0.start()
     can1.start()
-    print('Server has started')
+    status = DB_status()
     tornado.ioloop.IOLoop.instance().start()
 
