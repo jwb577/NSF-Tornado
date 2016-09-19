@@ -44,5 +44,6 @@ if __name__ == "__main__":
     can1 = NSFlogger(blocksize=1000, interface='can1')
     can0.start()
     can1.start()
+    print('Server has started')
     tornado.ioloop.IOLoop.instance().start()
 
