@@ -12,9 +12,10 @@ class DB_status:
         Process(target=self.update_status, args=()).start()
     
     def printForm(self):
-        print("NSF Logger Started At: {}").format(self.starttime)
-        print("mysql '{}' table size: {} MB").format(self.log_name, self.log_size)
-                
+        print("NSF Logger Started At: {}".format(self.starttime))
+        print("mysql '{}' table size: {} MB".format(self.log_name, self.log_size))
+        print("current timestamp:  "+ str(arrow.utcnow().timestamp))        
+
     def update_status(self):
         while True:
             log_size = get_log_size()[1]
@@ -23,6 +24,3 @@ class DB_status:
             os.system('clear')
             self.printForm()
 
-    def printForm(self):
-        print("NSF Logger Started At: {}".format(self.starttime))
-        print("mysql '{}' table size: {} MB".format(self.log_name, self.log_size))
