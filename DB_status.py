@@ -9,16 +9,20 @@ class DB_status:
         self.starttime = arrow.utcnow()
         self.log_size = 0
         self.log_name = get_log_size()[0]
-        Process(target=update_status, args=()).start()
-
+        Process(target=self.update_status, args=()).start()
+    
+    def printForm(self):
+        print("NSF Logger Started At: {}").format(self.starttime)
+        print("mysql '{}' table size: {} MB").format(self.log_name, self.log_size)
+                
     def update_status(self):
         while True:
             log_size = get_log_size()[1]
             if log_size != self.log_size:
                 self.log_size = log_size
             os.system('clear')
-            printForm(self)
+            self.printForm()
 
     def printForm(self):
-        print("NSF Logger Started At: {}").format(self.starttime)
-        print("mysql '{}' table size: {} MB").format(self.log_name, self.log_size)
+        print("NSF Logger Started At: {}".format(self.starttime))
+        print("mysql '{}' table size: {} MB".format(self.log_name, self.log_size))
