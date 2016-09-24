@@ -21,6 +21,7 @@ class NSFlogger:
                 block.append(q.get())
             elif len(block) == self.blocksize:
                 log_message_block(block)
+                print('send block')
                 del block[:]
             else:
                 pass
@@ -28,11 +29,14 @@ class NSFlogger:
         while True:
        	    message = bus.readMessage()
             utc = arrow.utcnow()
-            timestamp = str(utc.timestamp) + '.' + str(utc.microsecond)
+            timestamp = '.'.join((str(utc.timestamp),str(utc.microsecond)))
             q.put((timestamp, message))
 
     def start(self):
-        bus = CanTools(self.interface)
+        try:
+            bus = CanTools(self.interface)
+        except OSError:
+            print('Could not bind to interface {}'.format(self.interface))
         self.running = True
         Process(target=self.listen, args=(bus,self.q)).start()
         Process(target=self.push, args=(self.q,)).start()
