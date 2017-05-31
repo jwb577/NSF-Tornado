@@ -1,0 +1,6 @@
+
+{% block content %}
+{% for timestamp, message in log_data %}
+	<p>{{ timestamp }}:      {{ message }}</p>
+{% endfor %}
+{% endblock %}

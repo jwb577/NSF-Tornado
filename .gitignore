@@ -1,0 +1,8 @@
+_site
+.sass-cache
+.jekyll-metadata
+settings.py
+*.pyc
+cert_files/*
+*.swp
+.DS_Store
