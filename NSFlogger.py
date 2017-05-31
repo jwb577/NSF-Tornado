@@ -36,6 +36,8 @@ class NSFlogger:
         self.running = False
 
 if __name__ == '__main__':
+    bus = CanTools('can1')
+    print (bus.readMessageRaw())
     can0 = NSFlogger(blocksize=1000, interface='can0')
     can1 = NSFlogger(blocksize=1000, interface='can1')
     can0.start()
