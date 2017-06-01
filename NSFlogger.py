@@ -17,7 +17,7 @@ class NSFlogger:
         block = []
         while self.running:
             if q.qsize() > self.blocksize and len(block)<self.blocksize:
-                block.append(str(q.get()))
+                block.append(q.get())
             elif len(block) == self.blocksize:
                 print('attempting to log block to mysql')
                 print (block)
