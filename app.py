@@ -10,7 +10,6 @@ from NSFlogger import NSFlogger
 from NSFsettings import *
 from NSFviews import *
 
-
 # Assign handler to the server root  (127.0.0.1:PORT/)
 application = tornado.web.Application([
     (r"/", Index)
