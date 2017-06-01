@@ -25,6 +25,7 @@ class NSFlogger:
     def listen(self, bus, q):
         while True:
        	    message = bus.readMessage()
+            print (message)
             q.put(message)
 
     def start(self):
