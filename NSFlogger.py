@@ -18,6 +18,7 @@ class NSFlogger:
                 block.append(str(q.get()))
             elif len(block) == self.blocksize:
                 print('attempting to log block to mysql')
+                print (block)
                 log_message_block(block)
             else:
                 pass
@@ -25,7 +26,6 @@ class NSFlogger:
     def listen(self, bus, q):
         while True:
        	    message = bus.readMessage()
-            print (message)
             q.put(message)
 
     def start(self):
