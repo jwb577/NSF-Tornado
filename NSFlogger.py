@@ -30,6 +30,7 @@ class NSFlogger:
        	    message = bus.readMessage()
             utc = arrow.utcnow()
             timestamp = str(utc.timestamp) + str(utc.microsecond)
+            print (message)
             q.put((timestamp, message))
 
     def start(self):
