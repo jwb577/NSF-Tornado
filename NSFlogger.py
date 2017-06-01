@@ -1,6 +1,8 @@
 from canTools import CanTools
 from NSFutilities import *
 from multiprocessing import Process, Queue
+import arrow
+
 
 class NSFlogger:
     def __init__(self, **kwargs):
@@ -26,7 +28,9 @@ class NSFlogger:
     def listen(self, bus, q):
         while True:
        	    message = bus.readMessage()
-            q.put(message)
+            utc = arrow.utcnow()
+            timestamp = str(utc.timestamp) + str(utc.microsecond)
+            q.put((timestamp, message))
 
     def start(self):
         bus = CanTools(self.interface)
