@@ -3,7 +3,5 @@ tornado-jinja2
 arrow
 wtforms-tornado
 jinja2
-MySQL-python
+MySQLdb
 requests
-twilio
-bcrypt

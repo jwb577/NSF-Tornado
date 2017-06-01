@@ -21,7 +21,7 @@ def setup_db():
     c.execute('CREATE DATABASE IF NOT EXISTS logger_data;')
     myDB.commit()
     c.execute('USE logger_data;')
-    c.execute('CREATE TABLE IF NOT EXISTS `log` (timestamp varchar(32), message varchar(64));')
+    c.execute('CREATE TABLE IF NOT EXISTS `log` (timestamp varchar(32), message blob);')
     myDB.commit()
     try:
         c.execute("CREATE USER '{}'@'localhost' IDENTIFIED BY '{}';".format(DB_USER_USER, DB_USER_PASS))

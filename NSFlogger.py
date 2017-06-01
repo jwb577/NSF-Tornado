@@ -1,8 +1,6 @@
-from queue import Queue
 from canTools import CanTools
-from concurrent.futures import ThreadPoolExecutor
 from NSFutilities import *
-
+from multiprocessing import Process, Queue
 
 class NSFlogger:
     def __init__(self, **kwargs):
@@ -12,33 +10,37 @@ class NSFlogger:
             self.interface = kwargs.get('interface')
         except KeyError:
             print ('KeyError on NSFlogger constructor')
-    def push(self):
+    def push(self, q):
+        print('push started on '+ self.interface)
         block = []
         while self.running:
             if q.qsize() > self.blocksize and len(block)<self.blocksize:
-                block.append(q.get())
+                block.append(str(q.get()))
             elif len(block) == self.blocksize:
+                print('attempting to log block to mysql')
                 log_message_block(block)
-            else: pass
+            else:
+                pass
 
-    def listen(self, bus):
-        while self.running:
-            q.put(bus.readMessageRaw())
+    def listen(self, bus, q):
+        while True:
+       	    message = bus.readMessageRaw()
+            q.put(message)
 
     def start(self):
         bus = CanTools(self.interface)
         self.running = True
-        with ThreadPoolExecutor(max_workers=2) as worker:
-            worker.submit(self.listen, bus)
-            worker.submit(self.push)
+        print('started on '+self.interface)
+        Process(target=self.listen, args=(bus,self.q)).start()
+        Process(target=self.push, args=(self.q,)).start()
 
     def stop(self):
         self.running = False
 
 if __name__ == '__main__':
-    bus = CanTools('can1')
-    print (bus.readMessageRaw())
     can0 = NSFlogger(blocksize=1000, interface='can0')
     can1 = NSFlogger(blocksize=1000, interface='can1')
-    can0.start()
-    can1.start()
+    bus0 = CanTools(can0.interface)
+    bus1 = CanTools(can1.interface)
+    can1.listen(bus1)
+    can0.listen(bus0)
