@@ -25,7 +25,7 @@ class CanTools():
 		data = data[:length].hex().upper()
 		n = 2
 		data = [data[i:i+n] for i in range(0,len(data),n)]
-		print(self.interface + " "canId + " [" + str(length) +"] " + " ".join(data), end = " \n ")
+		print(self.interface + " " + canId + " [" + str(length) +"] " + " ".join(data), end = " \n ")
 		return canPacket
 	
 	def readBytes(self, canPacket):
