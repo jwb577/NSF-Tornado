@@ -34,7 +34,7 @@ def setup_db():
 def get_log_segment(timestamp, duration):
     myDB = MySQLdb.connect(host='localhost', port=3306, user=DB_USER_USER, passwd=DB_USER_PASS, db='logger_data')
     cursor = myDB.cursor()
-    cursor.execute("SELECT timestamp, message FROM log WHERE timestamp>{} AND timestamp<{}".format(timestamp,arrow.get(timestamp).replace(seconds=+int(duration)).timestamp))
+    cursor.execute("SELECT timestamp, message FROM log WHERE timestamp>{} AND timestamp<{} ORDER BY timestamp ASC".format(timestamp,arrow.get(timestamp).replace(seconds=+int(duration)).timestamp))
     result = cursor.fetchall()
     return list(result)
 
