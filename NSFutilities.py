@@ -38,6 +38,13 @@ def get_log_segment(timestamp, duration):
     result = cursor.fetchall()
     return list(result)
 
+def get_log_size():
+    myDB = MySQLdb.connect(host='localhost', port=3306, user=DB_USER_USER, passwd=DB_USER_PASS, db='logger_data')
+    cursor = myDB.cursor()
+    cursor.execute("SELECT table_name AS `Table`, round(((data_length + index_length) / 1024 / 1024), 2) `Size in MB` FROM information_schema.TABLES WHERE table_schema = 'logger_data' AND table_name = 'log';")
+    result = cursor.fetchone()
+    return result
+
 def log_message(message):
     myDB = MySQLdb.connect(host='localhost', port=3306, user=DB_USER_USER, passwd=DB_USER_PASS, db='logger_data')
     cursor = myDB.cursor()
