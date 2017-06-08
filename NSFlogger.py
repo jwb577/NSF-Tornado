@@ -2,7 +2,9 @@
 
 from canTools import CanTools
 from NSFutilities import *
-from multiprocessing import Process, Queue
+from tornado import gen
+from tornado.queues import Queue
+from tornado.ioloop import IOLoop
 import arrow
 
 
@@ -14,6 +16,8 @@ class NSFlogger:
             self.interface = kwargs.get('interface')
         except KeyError:
             print ('KeyError on NSFlogger constructor')
+    
+    @gen.coroutine
     def push(self, q):
         block = []
         while self.running:
@@ -24,22 +28,31 @@ class NSFlogger:
                 del block[:]
             else:
                 pass
+    @gen.coroutine
     def listen(self, bus, q):
         while True:
        	    message = bus.readMessage()
             utc = arrow.utcnow()
-            timestamp = str(utc.timestamp) + '.' + str(utc.microsecond)
+            timestamp = [str(utc.timestamp),str(utc.microsecond)].join('.')
             q.put((timestamp, message))
-
+    
+    @gen.coroutine
     def start(self):
         bus = CanTools(self.interface)
         self.running = True
-        Process(target=self.listen, args=(bus,self.q)).start()
-        Process(target=self.push, args=(self.q,)).start()
+        IOLoop.current().spawn_callback(listen(bus, self.q))
+        IOLoop.current().spawn_callback(push(self.q))
+        yield quit
 
     def stop(self):
         self.running = False
 
+    @gen.coroutine
+    def quit(self):
+        try:
+            while self.running;
+        finally: print ("Stop logging on {}".fomat(self.interface))
+ 
 if __name__ == '__main__':
     can0 = NSFlogger(blocksize=1000, interface='can0')
     can1 = NSFlogger(blocksize=1000, interface='can1')

@@ -42,7 +42,8 @@ if __name__ == "__main__":
         application.listen(HTTP_PORT)
     can0 = NSFlogger(blocksize=1000, interface='can0')
     can1 = NSFlogger(blocksize=1000, interface='can1')
-    can0.start()
-    can1.start()
-    tornado.ioloop.IOLoop.instance().start()
-
+    loop = tornado.ioloop.IOLoop.instance()
+    loop.start()
+    loop.run_sync(can0.start())
+    loop.run_sync(can1.start())
+    
